@@ -8,8 +8,17 @@
 </head>
 <body>
     <div id="card">
-        <p>Initial Text</p>
+        <p></p>
     </div>
+    <button id="newbookbtn">New Book</button>
+    <form id="bookform">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="author" placeholder="Author" required>
+        <input type="number" id="pages" placeholder="Pages" required>
+        <label for="readstatus">Read</label>
+        <input type="checkbox" id="readstatus">
+        <button type="submit" id="addbookbtn">Add Book</button>
+    </form>
 </body>
 <script src="script.js"></script>
 </html>
