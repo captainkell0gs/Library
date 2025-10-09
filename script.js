@@ -1,3 +1,11 @@
+const form = document.querySelector("#bookform");
+const newBookBtn = document.querySelector("#newbookbtn");
+const addBookBtn = document.querySelector("#addbookbtn")
+const titleInput = document.querySelector("#title")
+const authorInput = document.querySelector("#author")
+const pagesInput = document.querySelector("#pages")
+const readStatusInput = document.querySelector("#readstatus")
+
 const myLibrary = [];
 
 function Book(title, author, pages, readStatus) {
@@ -29,5 +37,24 @@ function displayBook() {
     }
 }
 
-addBookToLibrary(new Book("The Hobbit", "J.R.R. Tolkien", 295, "not read yet"));
+newBookBtn.addEventListener("click", () => {
+    if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "block";
+    }else {
+        form.style.display = "none";
+    }
+})
+
+addBookBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const title = titleInput.value;
+    const author = authorInput.value;
+    const pages = pagesInput.value;
+    const readStatus = readStatusInput.checked ? "Read" : "Unread";
+
+    addBookToLibrary(new Book(title, author, pages, readStatus));
+
+    form.reset();
+});
 
