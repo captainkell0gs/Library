@@ -34,7 +34,11 @@ function displayBook() {
     const cardText = document.querySelector("#card");
     cardText.innerHTML = "";
     for (const book of myLibrary) {
-        cardText.innerHTML += `<p>${book.info()} <button class="remove-btn" data-id="${book.id}">Remove</button></p>`
+        cardText.innerHTML += `<p>
+        ${book.info()} 
+        <button class="remove-btn" data-id="${book.id}">Remove</button>
+        <button class="status" data-id="${book.id}">Status</button>
+        </p>`
     }
 }
 
@@ -66,5 +70,12 @@ document.querySelector("#card").addEventListener("click", (e) => {
         myLibrary.splice(index, 1);
         displayBook();
     }
-})
+
+    if(e.target.classList.contains("status")) {
+        const id = e.target.dataset.id;
+        const book = myLibrary.find(b => b.id === id);
+        book.readStatus = !book.readStatus;
+        displayBook();
+    }
+});
 
