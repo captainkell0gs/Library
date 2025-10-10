@@ -34,7 +34,7 @@ function displayBook() {
     const cardText = document.querySelector("#card");
     cardText.innerHTML = "";
     for (const book of myLibrary) {
-        cardText.innerHTML += `<p>${book.info()}</p>`
+        cardText.innerHTML += `<p>${book.info()} <button class="remove-btn" data-id="${book.id}">Remove</button></p>`
     }
 }
 
@@ -58,4 +58,13 @@ addBookBtn.addEventListener("click", (e) => {
 
     form.reset();
 });
+
+document.querySelector("#card").addEventListener("click", (e) => {
+    if (e.target.classList.contains("remove-btn")) {
+        const id = e.target.dataset.id;
+        const index = myLibrary.findIndex(b => b.id === id);
+        myLibrary.splice(index, 1);
+        displayBook();
+    }
+})
 
