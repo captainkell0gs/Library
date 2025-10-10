@@ -21,7 +21,8 @@ function Book(title, author, pages, readStatus) {
 }
 
 Book.prototype.info = function() {
-    return `${this.title} by ${this.author}, ${this.pages} pages, ${this.readStatus}`;
+    const statusText = this.readStatus ? "Read" : "Not Read Yet";
+    return `${this.title} by ${this.author}, ${this.pages} pages, ${statusText}`;
 };
 
 function addBookToLibrary(book) {
@@ -51,7 +52,7 @@ addBookBtn.addEventListener("click", (e) => {
     const title = titleInput.value;
     const author = authorInput.value;
     const pages = pagesInput.value;
-    const readStatus = readStatusInput.checked ? "Read" : "Unread";
+    const readStatus = readStatusInput.checked;
 
     addBookToLibrary(new Book(title, author, pages, readStatus));
 
