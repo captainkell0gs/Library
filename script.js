@@ -6,76 +6,93 @@ const authorInput = document.querySelector("#author")
 const pagesInput = document.querySelector("#pages")
 const readStatusInput = document.querySelector("#readstatus")
 
-const myLibrary = [];
+class Book {
+    constructor (title, author, pages, readStatus) {
+        if(!new.target) {
+            throw Error("You must use the 'new' operator to call the constructor");
+        }
 
-function Book(title, author, pages, readStatus) {
-    if(!new.target) {
-        throw Error("You must use the 'new' operator to call the constructor");
+        this.title = title;
+        this.author = author;
+        this.pages = pages;
+        this.readStatus = readStatus;
+        this.id = crypto.randomUUID();
     }
 
-    this.title = title;
-    this.author = author;
-    this.pages = pages;
-    this.readStatus = readStatus;
-    this.id = crypto.randomUUID();
+    info() {
+        const statusText = this.readStatus ? "Read" : "Unread";
+        return `${this.title} by ${this.author}, ${this.pages} pages, ${statusText}`;
+    }
 }
 
-Book.prototype.info = function() {
-    const statusText = this.readStatus ? "Read" : "Unread";
-    return `${this.title} by ${this.author}, ${this.pages} pages, ${statusText}`;
-};
+class Library {
+    #books = [];
 
-function addBookToLibrary(book) {
-    myLibrary.push(book);
-    displayBook();
-}
+    addBook(book) {
+        this.#books.push(book);
+        this.displayBook();
+    }
 
-function displayBook() {
+    removeBook(id) {
+        const index = this.#books.findIndex(b => b.id === id);
+        this.#books.splice(index, 1);
+        this.displayBook();
+    }
+
+    toggleStatus(id) {
+        const book = this.#books.find(b => b.id === id);
+        book.readStatus = !book.readStatus;
+        this.displayBook();
+    }
+
+    displayBook() {
     const cardText = document.querySelector("#card");
     cardText.innerHTML = "";
-    for (const book of myLibrary) {
-        cardText.innerHTML += `<p>
-        ${book.info()} 
-        <button class="remove-btn" data-id="${book.id}">Remove</button>
-        <button class="status" data-id="${book.id}">Status</button>
-        </p>`
+        for (const book of this.#books) {
+            cardText.innerHTML += `<p>
+            ${book.info()} 
+            <button class="remove-btn" data-id="${book.id}">Remove</button>
+            <button class="status" data-id="${book.id}">Status</button>
+            </p>`
+        }
+    }
+
+    init() {
+        newBookBtn.addEventListener("click", () => {
+            if (form.style.display === "none" || form.style.display === "") {
+                form.style.display = "block";
+            }else {
+                form.style.display = "none";
+            }
+        })
+
+        addBookBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const title = titleInput.value;
+            const author = authorInput.value;
+            const pages = pagesInput.value;
+            const readStatus = readStatusInput.checked;
+
+            this.addBook(new Book(title, author, pages, readStatus));
+
+            form.reset();
+        });
+
+        document.querySelector("#card").addEventListener("click", (e) => {
+            if (e.target.classList.contains("remove-btn")) {
+                const id = e.target.dataset.id;
+                this.removeBook(id);
+            }
+
+            if(e.target.classList.contains("status")) {
+                const id = e.target.dataset.id;
+                this.toggleStatus(id);
+            }
+        })
     }
 }
 
-newBookBtn.addEventListener("click", () => {
-    if (form.style.display === "none" || form.style.display === "") {
-        form.style.display = "block";
-    }else {
-        form.style.display = "none";
-    }
-})
-
-addBookBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const title = titleInput.value;
-    const author = authorInput.value;
-    const pages = pagesInput.value;
-    const readStatus = readStatusInput.checked;
-
-    addBookToLibrary(new Book(title, author, pages, readStatus));
-
-    form.reset();
-});
-
-document.querySelector("#card").addEventListener("click", (e) => {
-    if (e.target.classList.contains("remove-btn")) {
-        const id = e.target.dataset.id;
-        const index = myLibrary.findIndex(b => b.id === id);
-        myLibrary.splice(index, 1);
-        displayBook();
-    }
-
-    if(e.target.classList.contains("status")) {
-        const id = e.target.dataset.id;
-        const book = myLibrary.find(b => b.id === id);
-        book.readStatus = !book.readStatus;
-        displayBook();
-    }
-});
+const library = new Library();
+library.init();
 
