@@ -60,23 +60,94 @@ class Library {
     init() {
         newBookBtn.addEventListener("click", () => {
             if (form.style.display === "none" || form.style.display === "") {
-                form.style.display = "block";
+                form.style.display = "flex";
             }else {
                 form.style.display = "none";
             }
         })
 
-        addBookBtn.addEventListener("click", (e) => {
-            e.preventDefault();
+        const validators = {
+            title (input, error) {
+                if (input.validity.valueMissing) {
+                    error.textContent = 'Title is required.';
+                    input.setCustomValidity('Title is required');
+                } else {
+                    error.textContent = '';
+                    input.setCustomValidity('');
+                }
+            }, 
 
+            author (input, error) {
+                if (input.validity.valueMissing) {
+                    error.textContent = 'Author is required.';
+                    input.setCustomValidity('Author is required');
+                } else {
+                    error.textContent = '';
+                    input.setCustomValidity('');
+                }
+            }, 
+
+            pages (input, error) {
+                if (input.validity.valueMissing) {
+                    error.textContent = 'Number of pages is required.';
+                    input.setCustomValidity('Number of pages is required');
+                } else if (input.validity.typeMismatch) {
+                    error.textContent = 'Please enter a valid number.';
+                    input.setCustomValidity('Invalid number');
+                } else {
+                    error.textContent = '';
+                    input.setCustomValidity('');
+                }
+            }, 
+
+            readstatus (input, error) {
+                error.textContent = '';
+                input.setCustomValidity('');
+            }
+        }
+
+        function validateInput (input) {
+            const error = document.querySelector(`#${input.id}-error`);
+            const validator = validators[input.id];
+
+            if (!validator) return;
+
+            validator(input, error);
+        }
+
+        document.querySelectorAll("#bookform input").forEach((input) => {
+            input.addEventListener("input", () => {
+                validateInput(input);
+            });
+
+            input.addEventListener("blur", () => {
+                input.classList.add("touched");
+                validateInput(input);
+            });
+        });
+
+        form.addEventListener("input", () => {
+            const addBookBtn = document.querySelector("#addbookbtn");
+            addBookBtn.disabled = !form.checkValidity();
+        });
+
+        form.addEventListener("submit", (e) => {
             const title = titleInput.value;
             const author = authorInput.value;
             const pages = pagesInput.value;
             const readStatus = readStatusInput.checked;
 
-            this.addBook(new Book(title, author, pages, readStatus));
-
-            form.reset();
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                form.querySelectorAll("input").forEach((input) => {
+                    input.classList.add("touched");                    
+                });
+            } else {
+                e.preventDefault();
+                this.addBook(new Book(title, author, pages, readStatus));
+                form.style.display = "none";
+                form.reset();
+            }
         });
 
         document.querySelector("#card").addEventListener("click", (e) => {

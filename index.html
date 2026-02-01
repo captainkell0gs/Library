@@ -7,18 +7,30 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="card">
+    <div id="container">
+        <div id="card">
         <p></p>
+        </div>
+        <button id="newbookbtn">New Book</button>
+        <form id="bookform">
+            <input type="text" id="title" placeholder="Title" required>
+            <span class="error" id="title-error"></span>
+
+            <input type="text" id="author" placeholder="Author" required>
+            <span class="error" id="author-error"></span>
+
+            <input type="number" id="pages" placeholder="Pages" required>
+            <span class="error" id="pages-error"></span>
+
+            <div class="checkbox-group">
+            <label for="readstatus">Read</label>
+            <input type="checkbox" id="readstatus">
+            </div>
+            <span class="error" id="readstatus-error"></span>
+
+            <button type="submit" id="addbookbtn">Add Book</button>
+        </form>
     </div>
-    <button id="newbookbtn">New Book</button>
-    <form id="bookform">
-        <input type="text" id="title" placeholder="Title" required>
-        <input type="text" id="author" placeholder="Author" required>
-        <input type="number" id="pages" placeholder="Pages" required>
-        <label for="readstatus">Read</label>
-        <input type="checkbox" id="readstatus">
-        <button type="submit" id="addbookbtn">Add Book</button>
-    </form>
 </body>
 <script src="script.js"></script>
 </html>
